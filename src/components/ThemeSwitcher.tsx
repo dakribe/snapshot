@@ -3,7 +3,7 @@ export default function ThemeSwitcher() {
     const root = document.documentElement;
     const theme = root.dataset.theme === 'light' ? 'dark' : 'light';
     root.dataset.theme = theme;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'light' ? '#f4f7fb' : '#07101e');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'light' ? '#f5f5f5' : '#121212');
     try {
       localStorage.setItem('icetime-theme', theme);
     } catch {

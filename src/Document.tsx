@@ -14,16 +14,16 @@ export default function Document(props: ParentProps) {
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
-        <meta name="theme-color" content="#07101e" />
+        <meta name="theme-color" content="#121212" />
         <meta name="description" content="Today’s NHL scores, schedules, and game details." />
-        <title>IceTime · NHL scores</title>
+        <title>Snapshot · NHL scores</title>
         <script innerHTML={`(() => {
           const media = window.matchMedia('(prefers-color-scheme: light)');
           let saved;
           try { saved = localStorage.getItem('icetime-theme'); } catch {}
           const apply = (theme) => {
             document.documentElement.dataset.theme = theme;
-            document.querySelector('meta[name="theme-color"]').content = theme === 'light' ? '#f4f7fb' : '#07101e';
+            document.querySelector('meta[name="theme-color"]').content = theme === 'light' ? '#f5f5f5' : '#121212';
           };
           apply(saved === 'light' || saved === 'dark' ? saved : media.matches ? 'light' : 'dark');
           media.addEventListener('change', () => {
@@ -37,7 +37,7 @@ export default function Document(props: ParentProps) {
         <template id="design-contract">
           <span hidden>
             THESIS: A score-first NHL companion that refuses the portal dashboard and treats the daily slate as the product.
-            OWN-WORLD: Midnight navy, ice white, electric cyan, crisp dividers, dense rows, and high-contrast tabular scores.
+            OWN-WORLD: Neutral charcoal, soft white, monochrome accents, crisp dividers, dense rows, and high-contrast tabular scores.
             STORY: See today's games, read every state instantly, and open one matchup for records, stats, and events.
             FIRST VIEWPORT: Compact league header, seven-day strip, then a single authoritative schedule column with game state at left and matchup at center.
             FORM: Familiar sports-score utility, pinned by the FotMob reference; seed 715d9d6a.
