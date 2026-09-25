@@ -2,6 +2,7 @@ import { Title } from '@solidjs/meta';
 import { query, type RouteDefinition, type RouteProps } from '@solidjs/router';
 import { Errored, For, Loading, Show, createMemo } from 'solid-js';
 import {
+  formatGameTime,
   fullTeamName,
   gameStatus,
   getGame,
@@ -12,6 +13,7 @@ import {
   type Standing,
   type Team,
 } from '../../lib/nhl';
+import { createClientTimeZone } from '../../lib/time-zone';
 
 const gamePageQuery = query(async (id: string) => {
   const [game, standings] = await Promise.all([getGame(id), getStandings()]);
@@ -67,6 +69,7 @@ function GoalRow(props: { goal: Goal }) {
 }
 
 function GameContent(props: { id: string }) {
+  const timeZone = createClientTimeZone();
   const data = createMemo(() => gamePageQuery(props.id));
   const game = createMemo(() => data().game);
   const awayStanding = createMemo(() => recordFor(data().standings, game().awayTeam.abbrev));
@@ -86,16 +89,16 @@ function GameContent(props: { id: string }) {
 
       <section class="match-hero" aria-labelledby="match-title">
         <div class="match-meta">
-          <span class={{ 'status-pill': true, live: ['LIVE', 'CRIT'].includes(game().gameState) }}>{gameStatus(game())}</span>
+          <span class={{ 'status-pill': true, live: ['LIVE', 'CRIT'].includes(game().gameState) }}>{gameStatus(game(), timeZone())}</span>
           <span>{longDate(game().gameDate)}</span>
           <span>{game().venue.default}</span>
         </div>
         <div class="matchup">
           <TeamHero team={game().awayTeam} standing={awayStanding()} side="away" />
           <div class="match-score" id="match-title">
-            <Show when={started()} fallback={<><strong>VS</strong><span>{new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(new Date(game().startTimeUTC))}</span></>}>
+            <Show when={started()} fallback={<><strong>VS</strong><span>{formatGameTime(game().startTimeUTC, timeZone())}</span></>}>
               <strong>{game().awayTeam.score ?? 0}<i>–</i>{game().homeTeam.score ?? 0}</strong>
-              <span>{gameStatus(game())}</span>
+              <span>{gameStatus(game(), timeZone())}</span>
             </Show>
           </div>
           <TeamHero team={game().homeTeam} standing={homeStanding()} side="home" />

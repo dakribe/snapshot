@@ -3,6 +3,7 @@ import { query } from '@solidjs/router';
 import { Errored, For, Loading, Show, createMemo, createSignal } from 'solid-js';
 import { fullTeamName, gameStatus, getTodayScore, longDate, type Game } from '../lib/nhl';
 import { getPwhlScore } from '../lib/pwhl';
+import { createClientTimeZone } from '../lib/time-zone';
 
 const todayScore = query(getTodayScore, 'today-score');
 const pwhlScore = query(getPwhlScore, 'pwhl-score');
@@ -22,7 +23,7 @@ export const route = {
   },
 };
 
-function GameRow(props: { game: Game; pwhl?: boolean }) {
+function GameRow(props: { game: Game; timeZone?: string; pwhl?: boolean }) {
   const isStarted = () => ['LIVE', 'CRIT', 'OFF', 'FINAL'].includes(props.game.gameState);
   const isLive = () => ['LIVE', 'CRIT'].includes(props.game.gameState);
 
@@ -39,7 +40,7 @@ function GameRow(props: { game: Game; pwhl?: boolean }) {
           <span class="match-separator">vs</span>
           <div class="game-status">
             <Show when={isLive()}><span class="live-dot" aria-hidden="true" /></Show>
-            <span class={{ live: isLive() }}>{gameStatus(props.game)}</span>
+            <span class={{ live: isLive() }}>{gameStatus(props.game, props.timeZone)}</span>
           </div>
         </div>
         <div class="team-line home">
@@ -56,6 +57,7 @@ function GameRow(props: { game: Game; pwhl?: boolean }) {
 function Schedule() {
   const today = localDateString();
   const [selectedDate, setSelectedDate] = createSignal(today);
+  const timeZone = createClientTimeZone();
   const score = createMemo(() => todayScore(selectedDate()));
   const pwhl = createMemo(() => pwhlScore(selectedDate()));
   const isToday = createMemo(() => score().currentDate === today);
@@ -78,11 +80,11 @@ function Schedule() {
           <div class="game-list">
             <Show when={score().games.length}>
               <div class="league-bar"><span>National Hockey League</span></div>
-              <For each={score().games}>{(game) => <GameRow game={game} />}</For>
+              <For each={score().games}>{(game) => <GameRow game={game} timeZone={timeZone()} />}</For>
             </Show>
             <Show when={pwhl().games.length}>
               <div class="league-bar"><span>Professional Women’s Hockey League</span></div>
-              <For each={pwhl().games}>{(game) => <GameRow game={game} pwhl />}</For>
+              <For each={pwhl().games}>{(game) => <GameRow game={game} timeZone={timeZone()} pwhl />}</For>
             </Show>
           </div>
         </Show>

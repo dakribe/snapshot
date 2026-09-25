@@ -114,7 +114,15 @@ export function fullTeamName(team: Team) {
   return place && common ? `${place} ${common}` : common ?? place ?? team.abbrev;
 }
 
-export function gameStatus(game: Game) {
+export function formatGameTime(startTimeUTC: string, timeZone?: string) {
+  return new Intl.DateTimeFormat('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZone,
+  }).format(new Date(startTimeUTC));
+}
+
+export function gameStatus(game: Game, timeZone?: string) {
   if (game.gameScheduleState !== 'OK') return 'Postponed';
   if (game.gameState === 'LIVE' || game.gameState === 'CRIT') {
     if (game.clock?.inIntermission) return `Intermission · ${periodLabel(game.periodDescriptor)}`;
@@ -124,10 +132,7 @@ export function gameStatus(game: Game) {
     const suffix = game.gameOutcome?.lastPeriodType;
     return suffix && suffix !== 'REG' ? `Final/${suffix}` : 'Final';
   }
-  return new Intl.DateTimeFormat('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-  }).format(new Date(game.startTimeUTC));
+  return formatGameTime(game.startTimeUTC, timeZone);
 }
 
 export function periodLabel(period?: { number: number; periodType: string }) {
