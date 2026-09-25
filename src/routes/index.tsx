@@ -1,6 +1,6 @@
 import { Title } from '@solidjs/meta';
 import { query } from '@solidjs/router';
-import { Errored, For, Loading, Show, createMemo } from 'solid-js';
+import { Errored, For, Loading, Show, createMemo, createSignal } from 'solid-js';
 import { fullTeamName, gameStatus, getTodayScore, longDate, type Game } from '../lib/nhl';
 
 const todayScore = query(getTodayScore, 'today-score');
@@ -47,29 +47,33 @@ function GameRow(props: { game: Game }) {
 }
 
 function Schedule() {
-  const date = localDateString();
-  const score = createMemo(() => todayScore(date));
+  const today = localDateString();
+  const [selectedDate, setSelectedDate] = createSignal(today);
+  const score = createMemo(() => todayScore(selectedDate()));
+  const isToday = createMemo(() => score().currentDate === today);
+  const scheduleLabel = createMemo(() => isToday() ? 'Today' : longDate(score().currentDate));
+
   return (
     <>
-      <section class="date-strip" aria-label="Schedule dates">
-        <For each={score().gameWeek}>{(day) => (
-          <div class={{ 'date-chip': true, selected: day.date === score().currentDate }}>
-            <span>{day.dayAbbrev}</span>
-            <strong>{new Date(`${day.date}T12:00:00`).getDate()}</strong>
-            <small>{day.numberOfGames || '—'}</small>
-          </div>
-        )}</For>
+      <section class="schedule-day-nav" aria-label="Schedule day">
+        <button type="button" onClick={() => setSelectedDate(score().prevDate)} aria-label="Previous day">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m13 4-6 6 6 6" /></svg>
+        </button>
+        <strong>{scheduleLabel()}</strong>
+        <button type="button" onClick={() => setSelectedDate(score().nextDate)} aria-label="Next day">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6" /></svg>
+        </button>
       </section>
 
       <section class="schedule" aria-labelledby="schedule-title">
         <div class="section-heading">
           <div>
-            <h1 id="schedule-title">Today’s games</h1>
+            <h1 id="schedule-title">{isToday() ? 'Today’s games' : 'Games'}</h1>
             <p>{longDate(score().currentDate)} · {score().games.length} {score().games.length === 1 ? 'game' : 'games'}</p>
           </div>
           <span class="live-data"><i /> Live NHL data</span>
         </div>
-        <Show when={score().games.length} fallback={<div class="empty-state"><strong>No games today</strong><span>The NHL schedule is clear. Check back tomorrow.</span></div>}>
+        <Show when={score().games.length} fallback={<div class="empty-state"><strong>No games</strong><span>The NHL schedule is clear for {scheduleLabel().toLowerCase()}.</span></div>}>
           <div class="game-list">
             <For each={score().games}>{(game) => <GameRow game={game} />}</For>
           </div>
