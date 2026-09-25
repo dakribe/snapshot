@@ -1,4 +1,5 @@
 dist
+.alchemy
 .wrangler
 .output
 .vercel

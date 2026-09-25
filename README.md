@@ -2,7 +2,7 @@
 
 `bare` plus the app floors most projects want: `@solidjs/router` with file-system routes, per-page titles via `@solidjs/meta`, and a `vitest` test suite.
 
-**Deployment contract:** still zero server dependencies — `vite build` emits a purely static site; deploy `dist/client` to any static host.
+**Deployment contract:** SSR Worker on Cloudflare via Alchemy IaC. `vite build` still builds the SolidStart v2/Vite app, while `Cloudflare.Website.Vite` deploys the SSR server bundle as a Cloudflare Worker and uploads client assets as Worker static assets.
 
 ## How it works
 
@@ -52,13 +52,36 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br>
 
-### `npm run build`
+### `bun run build`
 
-Builds the static production site to `dist/client`, routes code-split.
+Builds the SolidStart v2/Vite production app, including the SSR server bundle and code-split client assets.
 
-### `npm run serve`
+### `bun run serve`
 
-Serves the production build locally.
+Serves the production build locally with Vite preview.
+
+### Cloudflare deployment with Alchemy
+
+Authenticate Alchemy with Cloudflare once:
+
+```bash
+bun alchemy profile edit --add Cloudflare
+```
+
+Then preview and deploy the infrastructure-defined site:
+
+```bash
+bun run alchemy:plan
+bun run alchemy:deploy
+```
+
+The initial stack does not configure a custom domain; Alchemy returns the generated Cloudflare `workers.dev` URL after deployment.
+
+For Cloudflare-backed local development on the existing dev port:
+
+```bash
+bun run alchemy:dev
+```
 
 ### `npm test`
 

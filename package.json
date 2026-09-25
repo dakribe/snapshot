@@ -8,6 +8,10 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
+    "alchemy:dev": "alchemy dev",
+    "alchemy:deploy": "alchemy deploy",
+    "alchemy:destroy": "alchemy destroy",
+    "alchemy:plan": "alchemy deploy --dry-run",
     "test": "vitest",
     "lint": "oxlint src"
   },
@@ -27,9 +31,13 @@
     "vitest": "^5.0.0"
   },
   "dependencies": {
+    "@effect/platform-bun": "^4.0.0-rc.117",
+    "@effect/platform-node": "^4.0.0-rc.117",
     "@solidjs/meta": "^1.0.0-next.2",
     "@solidjs/router": "^2.0.0-next.26",
     "@solidjs/web": "^2.0.0-rc.9",
+    "alchemy": "^2.0.0-beta.79",
+    "effect": "^4.0.0-rc.117",
     "solid-js": "^2.0.0-rc.9"
   }
 }
