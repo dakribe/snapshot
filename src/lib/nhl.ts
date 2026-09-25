@@ -115,6 +115,7 @@ export function fullTeamName(team: Team) {
 }
 
 export function formatGameTime(startTimeUTC: string, timeZone?: string) {
+  if (!timeZone) return '—';
   return new Intl.DateTimeFormat('en-US', {
     hour: 'numeric',
     minute: '2-digit',

@@ -1,10 +1,14 @@
 import { createSignal, onSettled } from 'solid-js';
 
+function browserTimeZone() {
+  return typeof window === 'undefined' ? undefined : Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
+
 export function createClientTimeZone() {
-  const [timeZone, setTimeZone] = createSignal<string>();
+  const [timeZone, setTimeZone] = createSignal<string | undefined>();
 
   onSettled(() => {
-    setTimeZone(Intl.DateTimeFormat().resolvedOptions().timeZone);
+    setTimeZone(browserTimeZone());
   });
 
   return timeZone;
