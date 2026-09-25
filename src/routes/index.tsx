@@ -75,6 +75,9 @@ function Schedule() {
         </button>
       </section>
 
+      <Show when={score().cache.stale}>
+        <p role="status">NHL updates are temporarily unavailable. Showing saved scores; they may be out of date.</p>
+      </Show>
       <section class="schedule" aria-label="Schedule">
         <Show when={score().games.length || pwhl().games.length} fallback={<div class="empty-state"><strong>No games</strong><span>The NHL and PWHL schedules are clear for {scheduleLabel().toLowerCase()}.</span></div>}>
           <div class="game-list">
@@ -96,7 +99,7 @@ function Schedule() {
 export default function Home() {
   return (
     <main class="page-shell">
-      <Title>Today’s hockey games · IceTime</Title>
+      <Title>Today’s hockey games · Snapshot</Title>
       <Errored fallback={(error, reset) => <div class="error-state"><strong>Couldn’t load today’s games</strong><span>{String(error())}</span><button onClick={reset}>Try again</button></div>}>
         <Loading fallback={<div class="schedule-loading" aria-label="Loading today’s games"><span /><span /><span /></div>}>
           <Schedule />

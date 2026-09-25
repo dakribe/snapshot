@@ -17,7 +17,7 @@ import { createClientTimeZone } from '../../lib/time-zone';
 
 const gamePageQuery = query(async (id: string) => {
   const [game, standings] = await Promise.all([getGame(id), getStandings()]);
-  return { game, standings: standings.standings };
+  return { game, standings: standings.standings, stale: game.cache.stale || standings.cache.stale };
 }, 'game-page');
 
 export const route = {
@@ -81,12 +81,15 @@ function GameContent(props: { id: string }) {
 
   return (
     <>
-      <Title>{`${game().awayTeam.abbrev} vs ${game().homeTeam.abbrev} · IceTime`}</Title>
+      <Title>{`${game().awayTeam.abbrev} vs ${game().homeTeam.abbrev} · Snapshot`}</Title>
       <a class="back-link" href="/">
         <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m13 4-6 6 6 6" /></svg>
         Today’s games
       </a>
 
+      <Show when={data().stale}>
+        <p role="status">NHL updates are temporarily unavailable. Showing saved game data or standings; they may be out of date.</p>
+      </Show>
       <section class="match-hero" aria-labelledby="match-title">
         <div class="match-meta">
           <span class={{ 'status-pill': true, live: ['LIVE', 'CRIT'].includes(game().gameState) }}>{gameStatus(game(), timeZone())}</span>

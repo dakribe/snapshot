@@ -1,4 +1,4 @@
-const NHL_API = 'https://api-web.nhle.com/v1';
+import { nhlFetch } from './nhl-cache';
 
 export type Localized = { default: string };
 
@@ -80,14 +80,6 @@ export type Standing = {
   streakCode: string;
   streakCount: number;
 };
-
-async function nhlFetch<T>(path: string): Promise<T> {
-  const response = await fetch(`${NHL_API}${path}`, {
-    headers: { Accept: 'application/json' },
-  });
-  if (!response.ok) throw new Error(`NHL data request failed (${response.status})`);
-  return response.json() as Promise<T>;
-}
 
 export async function getTodayScore(date: string) {
   'use server';

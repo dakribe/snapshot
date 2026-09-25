@@ -16,7 +16,7 @@ function PwhlGameContent(props: { id: string }) {
 
   return (
     <>
-      <Title>{`${game().awayTeam.abbrev} vs ${game().homeTeam.abbrev} · IceTime`}</Title>
+      <Title>{`${game().awayTeam.abbrev} vs ${game().homeTeam.abbrev} · Snapshot`}</Title>
       <a class="back-link" href="/">
         <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m13 4-6 6 6 6" /></svg>
         Today’s games
