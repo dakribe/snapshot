@@ -22,26 +22,27 @@ function GameRow(props: { game: Game }) {
 
   return (
     <a class="game-row" href={`/game/${props.game.id}`} aria-label={`${fullTeamName(props.game.awayTeam)} at ${fullTeamName(props.game.homeTeam)}`}>
-      <div class="game-status">
-        <Show when={isLive()}><span class="live-dot" aria-hidden="true" /></Show>
-        <span class={{ live: isLive() }}>{gameStatus(props.game)}</span>
-        <span class="game-network">{props.game.tvBroadcasts?.[0]?.network ?? 'NHL'}</span>
-      </div>
       <div class="teams">
-        <div class="team-line">
+        <div class="team-line away">
           <img src={props.game.awayTeam.logo} alt="" width="34" height="34" />
           <span class="team-name">{fullTeamName(props.game.awayTeam)}</span>
           <span class="team-code">{props.game.awayTeam.abbrev}</span>
           <Show when={isStarted()}><strong class="score">{props.game.awayTeam.score ?? 0}</strong></Show>
         </div>
-        <div class="team-line">
+        <div class="match-center">
+          <span class="match-separator">vs</span>
+          <div class="game-status">
+            <Show when={isLive()}><span class="live-dot" aria-hidden="true" /></Show>
+            <span class={{ live: isLive() }}>{gameStatus(props.game)}</span>
+          </div>
+        </div>
+        <div class="team-line home">
           <img src={props.game.homeTeam.logo} alt="" width="34" height="34" />
           <span class="team-name">{fullTeamName(props.game.homeTeam)}</span>
           <span class="team-code">{props.game.homeTeam.abbrev}</span>
           <Show when={isStarted()}><strong class="score">{props.game.homeTeam.score ?? 0}</strong></Show>
         </div>
       </div>
-      <svg class="chevron" viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 6 6-6 6" /></svg>
     </a>
   );
 }
@@ -71,10 +72,10 @@ function Schedule() {
             <h1 id="schedule-title">{isToday() ? 'Today’s games' : 'Games'}</h1>
             <p>{longDate(score().currentDate)} · {score().games.length} {score().games.length === 1 ? 'game' : 'games'}</p>
           </div>
-          <span class="live-data"><i /> Live NHL data</span>
         </div>
         <Show when={score().games.length} fallback={<div class="empty-state"><strong>No games</strong><span>The NHL schedule is clear for {scheduleLabel().toLowerCase()}.</span></div>}>
           <div class="game-list">
+            <div class="league-bar"><span>National Hockey League</span></div>
             <For each={score().games}>{(game) => <GameRow game={game} />}</For>
           </div>
         </Show>

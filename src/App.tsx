@@ -29,7 +29,7 @@ export default function App() {
           <Loading fallback={<main class="page-shell"><div class="schedule-loading"><span /><span /><span /></div></main>}>
             {props.children}
           </Loading>
-          <footer><span>Live data from the National Hockey League</span><span>Times shown in your local timezone</span></footer>
+          <footer><span>Times shown in your local timezone</span></footer>
         </>
       )}
     </Router>
