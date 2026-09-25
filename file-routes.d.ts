@@ -33,6 +33,12 @@ declare module "virtual:file-routes" {
   /** The flat route manifest, in scan order. */
   const routes: readonly [
     {
+      path: "/*404";
+      page: true;
+      $component: FileRouteLazyRef<typeof import("./src/routes/[...404]")>;
+      $$route: FileRouteEagerRef<typeof import("./src/routes/[...404]")>;
+    },
+    {
       path: "/";
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/index")>;
@@ -45,12 +51,6 @@ declare module "virtual:file-routes" {
       $$route?: undefined;
     },
     {
-      path: "/*404";
-      page: true;
-      $component: FileRouteLazyRef<typeof import("./src/routes/[...404]")>;
-      $$route: FileRouteEagerRef<typeof import("./src/routes/[...404]")>;
-    },
-    {
       path: "/game/:id";
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/game/[id]")>;
@@ -61,6 +61,12 @@ declare module "virtual:file-routes" {
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/users/[id]")>;
       $$route: FileRouteEagerRef<typeof import("./src/routes/users/[id]")>;
+    },
+    {
+      path: "/pwhl/game/:id";
+      page: true;
+      $component: FileRouteLazyRef<typeof import("./src/routes/pwhl/game/[id]")>;
+      $$route: FileRouteEagerRef<typeof import("./src/routes/pwhl/game/[id]")>;
     }
   ];
   export default routes;
@@ -106,6 +112,14 @@ declare module "virtual:file-routes" {
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/game/[id]")>;
       $$route: FileRouteEagerRef<typeof import("./src/routes/game/[id]")>;
+      children?: undefined;
+    },
+    {
+      path: "/pwhl/game/:id";
+      id: "/pwhl/game/:id";
+      page: true;
+      $component: FileRouteLazyRef<typeof import("./src/routes/pwhl/game/[id]")>;
+      $$route: FileRouteEagerRef<typeof import("./src/routes/pwhl/game/[id]")>;
       children?: undefined;
     }
   ];

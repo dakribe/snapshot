@@ -23,7 +23,6 @@ export default function App() {
                 <span aria-disabled="true">Standings</span>
                 <span aria-disabled="true">Teams</span>
               </nav>
-              <div class="header-league"><span>NHL</span><small>LIVE</small></div>
             </div>
           </header>
           <Loading fallback={<main class="page-shell"><div class="schedule-loading"><span /><span /><span /></div></main>}>

@@ -2,8 +2,10 @@ import { Title } from '@solidjs/meta';
 import { query } from '@solidjs/router';
 import { Errored, For, Loading, Show, createMemo, createSignal } from 'solid-js';
 import { fullTeamName, gameStatus, getTodayScore, longDate, type Game } from '../lib/nhl';
+import { getPwhlScore } from '../lib/pwhl';
 
 const todayScore = query(getTodayScore, 'today-score');
+const pwhlScore = query(getPwhlScore, 'pwhl-score');
 
 function localDateString(date = new Date()) {
   const year = date.getFullYear();
@@ -13,15 +15,19 @@ function localDateString(date = new Date()) {
 }
 
 export const route = {
-  preload: () => void todayScore(localDateString()),
+  preload: () => {
+    const date = localDateString();
+    void todayScore(date);
+    void pwhlScore(date);
+  },
 };
 
-function GameRow(props: { game: Game }) {
+function GameRow(props: { game: Game; pwhl?: boolean }) {
   const isStarted = () => ['LIVE', 'CRIT', 'OFF', 'FINAL'].includes(props.game.gameState);
   const isLive = () => ['LIVE', 'CRIT'].includes(props.game.gameState);
 
   return (
-    <a class="game-row" href={`/game/${props.game.id}`} aria-label={`${fullTeamName(props.game.awayTeam)} at ${fullTeamName(props.game.homeTeam)}`}>
+    <a class="game-row" href={props.pwhl ? `/pwhl/game/${props.game.id}` : `/game/${props.game.id}`} aria-label={`${fullTeamName(props.game.awayTeam)} at ${fullTeamName(props.game.homeTeam)}`}>
       <div class="teams">
         <div class="team-line away">
           <img src={props.game.awayTeam.logo} alt="" width="34" height="34" />
@@ -51,6 +57,7 @@ function Schedule() {
   const today = localDateString();
   const [selectedDate, setSelectedDate] = createSignal(today);
   const score = createMemo(() => todayScore(selectedDate()));
+  const pwhl = createMemo(() => pwhlScore(selectedDate()));
   const isToday = createMemo(() => score().currentDate === today);
   const scheduleLabel = createMemo(() => isToday() ? 'Today' : longDate(score().currentDate));
 
@@ -67,10 +74,16 @@ function Schedule() {
       </section>
 
       <section class="schedule" aria-label="Schedule">
-        <Show when={score().games.length} fallback={<div class="empty-state"><strong>No games</strong><span>The NHL schedule is clear for {scheduleLabel().toLowerCase()}.</span></div>}>
+        <Show when={score().games.length || pwhl().games.length} fallback={<div class="empty-state"><strong>No games</strong><span>The NHL and PWHL schedules are clear for {scheduleLabel().toLowerCase()}.</span></div>}>
           <div class="game-list">
-            <div class="league-bar"><span>National Hockey League</span></div>
-            <For each={score().games}>{(game) => <GameRow game={game} />}</For>
+            <Show when={score().games.length}>
+              <div class="league-bar"><span>National Hockey League</span></div>
+              <For each={score().games}>{(game) => <GameRow game={game} />}</For>
+            </Show>
+            <Show when={pwhl().games.length}>
+              <div class="league-bar"><span>Professional Women’s Hockey League</span></div>
+              <For each={pwhl().games}>{(game) => <GameRow game={game} pwhl />}</For>
+            </Show>
           </div>
         </Show>
       </section>
@@ -81,7 +94,7 @@ function Schedule() {
 export default function Home() {
   return (
     <main class="page-shell">
-      <Title>Today’s NHL games · IceTime</Title>
+      <Title>Today’s hockey games · IceTime</Title>
       <Errored fallback={(error, reset) => <div class="error-state"><strong>Couldn’t load today’s games</strong><span>{String(error())}</span><button onClick={reset}>Try again</button></div>}>
         <Loading fallback={<div class="schedule-loading" aria-label="Loading today’s games"><span /><span /><span /></div>}>
           <Schedule />
