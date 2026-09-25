@@ -1,3 +1,4 @@
+/* oxlint-disable solid/no-innerhtml -- Static, trusted theme bootstrap must run before first paint. */
 import type { ParentProps } from 'solid-js';
 import { HydrationScript } from '@solidjs/web';
 
@@ -16,6 +17,20 @@ export default function Document(props: ParentProps) {
         <meta name="theme-color" content="#07101e" />
         <meta name="description" content="Today’s NHL scores, schedules, and game details." />
         <title>IceTime · NHL scores</title>
+        <script innerHTML={`(() => {
+          const media = window.matchMedia('(prefers-color-scheme: light)');
+          let saved;
+          try { saved = localStorage.getItem('icetime-theme'); } catch {}
+          const apply = (theme) => {
+            document.documentElement.dataset.theme = theme;
+            document.querySelector('meta[name="theme-color"]').content = theme === 'light' ? '#f4f7fb' : '#07101e';
+          };
+          apply(saved === 'light' || saved === 'dark' ? saved : media.matches ? 'light' : 'dark');
+          media.addEventListener('change', () => {
+            try { saved = localStorage.getItem('icetime-theme'); } catch {}
+            if (saved !== 'light' && saved !== 'dark') apply(media.matches ? 'light' : 'dark');
+          });
+        })();`} />
         <HydrationScript />
       </head>
       <body>

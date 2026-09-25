@@ -2,6 +2,7 @@ import { Title } from '@solidjs/meta';
 import { Loading } from 'solid-js';
 import { paths, Router } from './router';
 import './App.css';
+import ThemeSwitcher from './components/ThemeSwitcher';
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
                 <span aria-disabled="true">Standings</span>
                 <span aria-disabled="true">Teams</span>
               </nav>
+              <ThemeSwitcher />
             </div>
           </header>
           <Loading fallback={<main class="page-shell"><div class="schedule-loading"><span /><span /><span /></div></main>}>
