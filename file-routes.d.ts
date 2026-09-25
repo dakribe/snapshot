@@ -57,6 +57,12 @@ declare module "virtual:file-routes" {
       $$route: FileRouteEagerRef<typeof import("./src/routes/game/[id]")>;
     },
     {
+      path: "/team/:abbrev";
+      page: true;
+      $component: FileRouteLazyRef<typeof import("./src/routes/team/[abbrev]")>;
+      $$route: FileRouteEagerRef<typeof import("./src/routes/team/[abbrev]")>;
+    },
+    {
       path: "/users/:id";
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/users/[id]")>;
@@ -112,6 +118,14 @@ declare module "virtual:file-routes" {
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/game/[id]")>;
       $$route: FileRouteEagerRef<typeof import("./src/routes/game/[id]")>;
+      children?: undefined;
+    },
+    {
+      path: "/team/:abbrev";
+      id: "/team/:abbrev";
+      page: true;
+      $component: FileRouteLazyRef<typeof import("./src/routes/team/[abbrev]")>;
+      $$route: FileRouteEagerRef<typeof import("./src/routes/team/[abbrev]")>;
       children?: undefined;
     },
     {
