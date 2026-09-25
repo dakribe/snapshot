@@ -30,7 +30,7 @@ function recordFor(standings: Standing[], abbrev: string) {
 
 function TeamHero(props: { team: Team; standing?: Standing; side: 'away' | 'home' }) {
   return (
-    <div class={`hero-team ${props.side}`}>
+    <a class={`hero-team team-profile-link ${props.side}`} href={`/team/${props.team.abbrev}`} aria-label={`View ${fullTeamName(props.team)} players`}>
       <img src={props.team.logo} alt={`${fullTeamName(props.team)} logo`} width="96" height="96" />
       <div>
         <span>{props.side === 'away' ? 'Away' : 'Home'}</span>
@@ -38,7 +38,7 @@ function TeamHero(props: { team: Team; standing?: Standing; side: 'away' | 'home
         <b class="hero-team-code">{props.team.abbrev}</b>
         <p>{props.standing ? `${props.standing.wins}-${props.standing.losses}-${props.standing.otLosses} · ${props.standing.points} PTS` : 'Record unavailable'}</p>
       </div>
-    </div>
+    </a>
   );
 }
 

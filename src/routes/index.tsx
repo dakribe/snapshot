@@ -1,34 +1,31 @@
 import { Title } from '@solidjs/meta';
-import { query } from '@solidjs/router';
-import { Errored, For, Loading, Show, createMemo, createSignal } from 'solid-js';
+import { query, useSearchParams, type RouteDefinition } from '@solidjs/router';
+import { Errored, For, Loading, Show, createMemo } from 'solid-js';
 import { fullTeamName, gameStatus, getTodayScore, longDate, type Game } from '../lib/nhl';
 import { getPwhlScore } from '../lib/pwhl';
+import { getAhlScore } from '../lib/ahl';
 import { createClientTimeZone } from '../lib/time-zone';
+import { localDateString, scheduleDate } from '../lib/schedule-date';
 
 const todayScore = query(getTodayScore, 'today-score');
 const pwhlScore = query(getPwhlScore, 'pwhl-score');
-
-function localDateString(date = new Date()) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
+const ahlScore = query(getAhlScore, 'ahl-score');
 
 export const route = {
-  preload: () => {
-    const date = localDateString();
+  preload: ({ location }) => {
+    const date = scheduleDate(new URLSearchParams(location.search).get('date'));
     void todayScore(date);
     void pwhlScore(date);
+    void ahlScore(date);
   },
-};
+} satisfies RouteDefinition;
 
-function GameRow(props: { game: Game; timeZone?: string; pwhl?: boolean }) {
+function GameRow(props: { game: Game; timeZone?: string; league?: 'ahl' | 'pwhl' }) {
   const isStarted = () => ['LIVE', 'CRIT', 'OFF', 'FINAL'].includes(props.game.gameState);
   const isLive = () => ['LIVE', 'CRIT'].includes(props.game.gameState);
 
   return (
-    <a class="game-row" href={props.pwhl ? `/pwhl/game/${props.game.id}` : `/game/${props.game.id}`} aria-label={`${fullTeamName(props.game.awayTeam)} at ${fullTeamName(props.game.homeTeam)}`}>
+    <a class="game-row" href={props.league ? `/${props.league}/game/${props.game.id}` : `/game/${props.game.id}`} aria-label={`${fullTeamName(props.game.awayTeam)} at ${fullTeamName(props.game.homeTeam)}`}>
       <div class="teams">
         <div class="team-line away">
           <img src={props.game.awayTeam.logo} alt="" width="34" height="34" />
@@ -56,10 +53,13 @@ function GameRow(props: { game: Game; timeZone?: string; pwhl?: boolean }) {
 
 function Schedule() {
   const today = localDateString();
-  const [selectedDate, setSelectedDate] = createSignal(today);
+  const [search, setSearch] = useSearchParams();
+  const selectedDate = createMemo(() => scheduleDate(search.date, today), { name: 'selectedScheduleDate' });
+  const setSelectedDate = (date: string) => setSearch({ date });
   const timeZone = createClientTimeZone();
   const score = createMemo(() => todayScore(selectedDate()));
   const pwhl = createMemo(() => pwhlScore(selectedDate()));
+  const ahl = createMemo(() => ahlScore(selectedDate()), { name: 'ahlSchedule' });
   const isToday = createMemo(() => score().currentDate === today);
   const scheduleLabel = createMemo(() => isToday() ? 'Today' : longDate(score().currentDate));
 
@@ -79,15 +79,19 @@ function Schedule() {
         <p role="status">NHL updates are temporarily unavailable. Showing saved scores; they may be out of date.</p>
       </Show>
       <section class="schedule" aria-label="Schedule">
-        <Show when={score().games.length || pwhl().games.length} fallback={<div class="empty-state"><strong>No games</strong><span>The NHL and PWHL schedules are clear for {scheduleLabel().toLowerCase()}.</span></div>}>
+        <Show when={score().games.length || pwhl().games.length || ahl().games.length} fallback={<div class="empty-state"><strong>No games</strong><span>The NHL, AHL, and PWHL schedules are clear for {scheduleLabel().toLowerCase()}.</span></div>}>
           <div class="game-list">
             <Show when={score().games.length}>
               <div class="league-bar"><span>National Hockey League</span></div>
               <For each={score().games}>{(game) => <GameRow game={game} timeZone={timeZone()} />}</For>
             </Show>
+            <Show when={ahl().games.length}>
+              <div class="league-bar"><span>American Hockey League</span></div>
+              <For each={ahl().games}>{(game) => <GameRow game={game} timeZone={timeZone()} league="ahl" />}</For>
+            </Show>
             <Show when={pwhl().games.length}>
               <div class="league-bar"><span>Professional Women’s Hockey League</span></div>
-              <For each={pwhl().games}>{(game) => <GameRow game={game} timeZone={timeZone()} pwhl />}</For>
+              <For each={pwhl().games}>{(game) => <GameRow game={game} timeZone={timeZone()} league="pwhl" />}</For>
             </Show>
           </div>
         </Show>
