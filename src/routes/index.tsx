@@ -66,13 +66,7 @@ function Schedule() {
         </button>
       </section>
 
-      <section class="schedule" aria-labelledby="schedule-title">
-        <div class="section-heading">
-          <div>
-            <h1 id="schedule-title">{isToday() ? 'Today’s games' : 'Games'}</h1>
-            <p>{longDate(score().currentDate)} · {score().games.length} {score().games.length === 1 ? 'game' : 'games'}</p>
-          </div>
-        </div>
+      <section class="schedule" aria-label="Schedule">
         <Show when={score().games.length} fallback={<div class="empty-state"><strong>No games</strong><span>The NHL schedule is clear for {scheduleLabel().toLowerCase()}.</span></div>}>
           <div class="game-list">
             <div class="league-bar"><span>National Hockey League</span></div>
