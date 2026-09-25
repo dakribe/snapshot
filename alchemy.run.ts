@@ -6,6 +6,10 @@ export const Website = Cloudflare.Website.Vite("Website", {
   dev: {
     port: 3000,
   },
+  domain: {
+    name: "snapshot.dakribe.com",
+    zoneName: "dakribe.com",
+  },
 });
 
 export default Alchemy.Stack(
