@@ -42,13 +42,19 @@ declare module "virtual:file-routes" {
       path: "/";
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/index")>;
-      $$route?: undefined;
+      $$route: FileRouteEagerRef<typeof import("./src/routes/index")>;
     },
     {
       path: "/users";
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/users")>;
       $$route?: undefined;
+    },
+    {
+      path: "/game/:id";
+      page: true;
+      $component: FileRouteLazyRef<typeof import("./src/routes/game/[id]")>;
+      $$route: FileRouteEagerRef<typeof import("./src/routes/game/[id]")>;
     },
     {
       path: "/users/:id";
@@ -66,7 +72,7 @@ declare module "virtual:file-routes" {
       id: "/";
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/index")>;
-      $$route?: undefined;
+      $$route: FileRouteEagerRef<typeof import("./src/routes/index")>;
       children?: undefined;
     },
     {
@@ -93,6 +99,14 @@ declare module "virtual:file-routes" {
           children?: undefined;
         }
       ];
+    },
+    {
+      path: "/game/:id";
+      id: "/game/:id";
+      page: true;
+      $component: FileRouteLazyRef<typeof import("./src/routes/game/[id]")>;
+      $$route: FileRouteEagerRef<typeof import("./src/routes/game/[id]")>;
+      children?: undefined;
     }
   ];
 }
