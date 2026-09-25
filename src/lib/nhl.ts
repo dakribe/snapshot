@@ -72,6 +72,8 @@ export type GameDetail = Game & {
 
 export type Standing = {
   teamAbbrev: Localized;
+  teamName?: Localized;
+  teamLogo?: string;
   wins: number;
   losses: number;
   otLosses: number;
@@ -80,6 +82,30 @@ export type Standing = {
   streakCode: string;
   streakCount: number;
 };
+
+export type RosterPlayer = {
+  id: number;
+  firstName: Localized;
+  lastName: Localized;
+  headshot?: string;
+  sweaterNumber?: number;
+  positionCode: string;
+  shootsCatches?: string;
+  birthCountry?: string;
+};
+
+export type Roster = {
+  forwards: RosterPlayer[];
+  defensemen: RosterPlayer[];
+  goalies: RosterPlayer[];
+};
+
+export async function getTeamRoster(abbrev: string) {
+  'use server';
+  const code = abbrev.toUpperCase();
+  if (!/^[A-Z]{3}$/.test(code)) throw new Error('Invalid team abbreviation');
+  return nhlFetch<Roster>(`/roster/${code}/current`);
+}
 
 export async function getTodayScore(date: string) {
   'use server';

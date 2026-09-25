@@ -69,6 +69,12 @@ declare module "virtual:file-routes" {
       $$route: FileRouteEagerRef<typeof import("./src/routes/users/[id]")>;
     },
     {
+      path: "/ahl/game/:id";
+      page: true;
+      $component: FileRouteLazyRef<typeof import("./src/routes/ahl/game/[id]")>;
+      $$route: FileRouteEagerRef<typeof import("./src/routes/ahl/game/[id]")>;
+    },
+    {
       path: "/pwhl/game/:id";
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/pwhl/game/[id]")>;
@@ -126,6 +132,14 @@ declare module "virtual:file-routes" {
       page: true;
       $component: FileRouteLazyRef<typeof import("./src/routes/team/[abbrev]")>;
       $$route: FileRouteEagerRef<typeof import("./src/routes/team/[abbrev]")>;
+      children?: undefined;
+    },
+    {
+      path: "/ahl/game/:id";
+      id: "/ahl/game/:id";
+      page: true;
+      $component: FileRouteLazyRef<typeof import("./src/routes/ahl/game/[id]")>;
+      $$route: FileRouteEagerRef<typeof import("./src/routes/ahl/game/[id]")>;
       children?: undefined;
     },
     {
