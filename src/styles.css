@@ -1,1 +1,195 @@
 @import "tailwindcss";
+@import "@fontsource-variable/geist";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/*
+ * Palette
+ * - Cool neutrals for surfaces and ink.
+ * - Indigo: brand, selection, links.
+ * - Orange: the brand's second color (favorites, away-team series).
+ * - Red: live only (live dot, live clock, goal flash).
+ * Dark values are repeated under the media query (system preference, no
+ * JS yet) and under [data-theme="dark"] (explicit choice or resolved system).
+ */
+:root {
+  color-scheme: light;
+  --bg: oklch(0.972 0.004 265);
+  --surface: oklch(1 0 0);
+  --surface-2: oklch(0.956 0.006 265);
+  --surface-3: oklch(0.928 0.008 265);
+  --line: oklch(0.915 0.007 265);
+  --line-strong: oklch(0.86 0.01 265);
+  --ink: oklch(0.21 0.02 268);
+  --ink-2: oklch(0.45 0.02 268);
+  --ink-3: oklch(0.56 0.018 268);
+  --indigo: oklch(0.5 0.2 275);
+  --indigo-ink: oklch(0.46 0.2 275);
+  --indigo-soft: oklch(0.95 0.03 275);
+  --on-indigo: oklch(0.99 0 0);
+  --orange: oklch(0.68 0.17 50);
+  --orange-ink: oklch(0.55 0.16 45);
+  --orange-soft: oklch(0.96 0.035 55);
+  --live: oklch(0.58 0.22 22);
+  --live-soft: oklch(0.95 0.035 22);
+  --shadow: 0 1px 2px oklch(0.2 0.02 268 / 0.06), 0 1px 1px oklch(0.2 0.02 268 / 0.04);
+  --shadow-pop: 0 12px 32px -8px oklch(0.2 0.03 268 / 0.24), 0 2px 6px oklch(0.2 0.02 268 / 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: oklch(0.165 0.012 268);
+    --surface: oklch(0.21 0.014 268);
+    --surface-2: oklch(0.245 0.015 268);
+    --surface-3: oklch(0.285 0.016 268);
+    --line: oklch(0.28 0.015 268);
+    --line-strong: oklch(0.34 0.016 268);
+    --ink: oklch(0.96 0.005 268);
+    --ink-2: oklch(0.76 0.014 268);
+    --ink-3: oklch(0.64 0.014 268);
+    --indigo: oklch(0.68 0.16 275);
+    --indigo-ink: oklch(0.78 0.13 275);
+    --indigo-soft: oklch(0.3 0.06 275);
+    --on-indigo: oklch(0.16 0.02 275);
+    --orange: oklch(0.74 0.15 55);
+    --orange-ink: oklch(0.8 0.13 60);
+    --orange-soft: oklch(0.31 0.06 50);
+    --live: oklch(0.66 0.21 22);
+    --live-soft: oklch(0.3 0.07 22);
+    --shadow: 0 1px 2px oklch(0 0 0 / 0.3);
+    --shadow-pop: 0 14px 36px -8px oklch(0 0 0 / 0.6), 0 2px 6px oklch(0 0 0 / 0.3);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: oklch(0.165 0.012 268);
+  --surface: oklch(0.21 0.014 268);
+  --surface-2: oklch(0.245 0.015 268);
+  --surface-3: oklch(0.285 0.016 268);
+  --line: oklch(0.28 0.015 268);
+  --line-strong: oklch(0.34 0.016 268);
+  --ink: oklch(0.96 0.005 268);
+  --ink-2: oklch(0.76 0.014 268);
+  --ink-3: oklch(0.64 0.014 268);
+  --indigo: oklch(0.68 0.16 275);
+  --indigo-ink: oklch(0.78 0.13 275);
+  --indigo-soft: oklch(0.3 0.06 275);
+  --on-indigo: oklch(0.16 0.02 275);
+  --orange: oklch(0.74 0.15 55);
+  --orange-ink: oklch(0.8 0.13 60);
+  --orange-soft: oklch(0.31 0.06 50);
+  --live: oklch(0.66 0.21 22);
+  --live-soft: oklch(0.3 0.07 22);
+  --shadow: 0 1px 2px oklch(0 0 0 / 0.3);
+  --shadow-pop: 0 14px 36px -8px oklch(0 0 0 / 0.6), 0 2px 6px oklch(0 0 0 / 0.3);
+}
+
+@theme inline {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-indigo: var(--indigo);
+  --color-indigo-ink: var(--indigo-ink);
+  --color-indigo-soft: var(--indigo-soft);
+  --color-on-indigo: var(--on-indigo);
+  --color-orange: var(--orange);
+  --color-orange-ink: var(--orange-ink);
+  --color-orange-soft: var(--orange-soft);
+  --color-live: var(--live);
+  --color-live-soft: var(--live-soft);
+  --shadow-card: var(--shadow);
+  --shadow-pop: var(--shadow-pop);
+  --radius-card: 14px;
+}
+
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    /* tabular figures everywhere so scores and clocks never shift width */
+    font-feature-settings: "tnum";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scrollbar-color: var(--line-strong) transparent;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    min-height: 100dvh;
+    background: var(--bg);
+  }
+  ::selection {
+    background: var(--indigo);
+    color: var(--on-indigo);
+  }
+  :focus-visible {
+    outline: 2px solid var(--indigo);
+    outline-offset: 2px;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+}
+
+@layer components {
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow);
+  }
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+dialog.sheet[open] {
+  animation: sheet-up 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+dialog.sheet[open]::backdrop {
+  animation: fade-in 200ms ease-out;
+}
+dialog.sheet::backdrop {
+  background: oklch(0.15 0.02 268 / 0.45);
+  backdrop-filter: blur(2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  dialog.sheet[open],
+  dialog.sheet[open]::backdrop {
+    animation: none;
+  }
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
