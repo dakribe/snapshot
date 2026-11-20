@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2023",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "jsx": "react-jsx",
@@ -10,7 +14,15 @@
     "noEmit": true,
     "isolatedModules": true,
     "resolveJsonModule": true,
-    "types": ["@cloudflare/workers-types", "vite/client"]
+    "types": [
+      "@cloudflare/workers-types",
+      "vite/client",
+      "bun"
+    ]
   },
-  "include": ["src", "alchemy.run.ts", "vite.config.ts"]
+  "include": [
+    "src",
+    "alchemy.run.ts",
+    "vite.config.ts"
+  ]
 }
