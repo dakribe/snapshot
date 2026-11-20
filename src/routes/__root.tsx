@@ -2,10 +2,13 @@
 import { createRootRoute, HeadContent, Link, Outlet, Scripts } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { AppShell } from "../components/AppShell";
+import { readSession, timeZoneBootScript } from "../lib/session";
 import { themeBootScript } from "../lib/theme";
 import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({
+  // Cookie-backed settings (league prefs, time zone) for the first render.
+  loader: () => readSession(),
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -20,7 +23,7 @@ export const Route = createRootRoute({
         href: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Crect width='28' height='28' rx='8' fill='%234f46e5'/%3E%3Cellipse cx='16.5' cy='15.6' rx='6.2' ry='3.4' fill='white'/%3E%3Crect x='10.3' y='12.4' width='12.4' height='3.2' fill='white'/%3E%3Cellipse cx='16.5' cy='12.4' rx='6.2' ry='3.4' fill='%234f46e5' stroke='white' stroke-width='1.6'/%3E%3Cpath d='M3.6 12.6h4M4.6 16h3.4M5.8 19.4h2.4' stroke='%23f08a3c' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E",
       },
     ],
-    scripts: [{ children: themeBootScript }],
+    scripts: [{ children: themeBootScript }, { children: timeZoneBootScript }],
   }),
   shellComponent: RootDocument,
   component: () => (
