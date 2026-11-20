@@ -1,0 +1,19 @@
+# dependencies
+node_modules
+
+# build output
+dist
+.output
+
+# framework and tooling state
+.tanstack
+.alchemy
+.wrangler
+src/routeTree.gen.ts
+
+# env
+.env
+.env.*
+
+# OS
+.DS_Store
